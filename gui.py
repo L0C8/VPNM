@@ -34,7 +34,7 @@ def add_vpn_tab(notebook):
         file_path = filedialog.askopenfilename(filetypes=[("OVPN files", "*.ovpn")])
         if not file_path:
             return
-        # For now, use test credentials (you can hook into profile later)
+        ## -temp data- 
         username = "testuser"
         password = "testpass"
         name = import_vpn(file_path, username, password)

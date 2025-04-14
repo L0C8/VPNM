@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-import subprocess
+from vpn_controller import populate_vpn_tree
 
 # tab for displaying vpns
 def add_vpn_tab(notebook):
@@ -27,26 +27,6 @@ def add_vpn_tab(notebook):
     # Right side: test panel (with test button)
     test_button = tk.Button(right_frame, text="Test")
     test_button.pack(pady=20)
-
-## testing, move this over to vpn_controller.py later
-def populate_vpn_tree(tree):
-    tree.delete(*tree.get_children())
-    result = subprocess.run(["nmcli", "-t", "-f", "NAME,TYPE", "connection", "show"], capture_output=True, text=True)
-    lines = result.stdout.strip().split("\n")
-    for line in lines:
-        if ":vpn" in line:
-            name = line.split(":")[0]
-            tree.insert("", "end", values=(name,))
-
-def populate_vpn_tree(tree):
-    tree.delete(*tree.get_children())
-    result = subprocess.run(["nmcli", "-t", "-f", "NAME,TYPE", "connection", "show"], capture_output=True, text=True)
-    lines = result.stdout.strip().split("\n")
-    for line in lines:
-        if ":vpn" in line:
-            name = line.split(":")[0]
-            tree.insert("", "end", values=(name,))
-
 
 # tab for user data
 def add_profile_tab(notebook):

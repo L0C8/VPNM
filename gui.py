@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from vpn_controller import populate_vpn_tree
+from vpn_controller import *
 
 # tab for displaying vpns
 def add_vpn_tab(notebook):
@@ -22,7 +22,9 @@ def add_vpn_tab(notebook):
     tree.heading("Name", text="VPN Name")
     tree.pack(fill="both", expand=True, padx=10, pady=10)
 
-    populate_vpn_tree(tree)
+    tree.delete(*tree.get_children())
+    for name in get_all_vpn_names():
+        tree.insert("", "end", values=(name,))
 
     # Right side: test panel (with test button)
     test_button = tk.Button(right_frame, text="Test")

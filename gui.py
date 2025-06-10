@@ -32,7 +32,9 @@ def apply_theme(root):
                 child.configure(bg=panel_bg, fg=fg)
             elif isinstance(child, tk.Button):
                 child.configure(bg=button_bg, fg=fg, activebackground=button_bg)
-            elif isinstance(child, tk.Entry):
+            elif isinstance(child, tk.Entry) and not isinstance(child, ttk.Entry):
+                # Skip ttk widgets like Combobox which inherit from tk.Entry but
+                # don't support the classic Tk options
                 child.configure(bg=panel_bg, fg=fg, insertbackground=fg)
             recurse(child)
 

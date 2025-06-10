@@ -2,7 +2,25 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
 from vpn_controller import *
-from config import profiles, selected_profile, add_profile, get_profile_names, get_profile, profile_selector_widget
+from config import profiles, selected_profile, add_profile, get_profile_names, get_profile, profile_selector_widget, set_selected_profile, load_profiles
+import theme_config
+
+# ensure stored profiles are loaded before building UI
+load_profiles()
+theme_config.load_themes()
+
+def apply_theme(root):
+    theme = theme_config.themes.get(theme_config.active_theme)
+    if not theme:
+        return
+    bg = theme_config.to_hex(theme['bg'])
+    fg = theme_config.to_hex(theme['fg'])
+    style = ttk.Style()
+    style.configure('TFrame', background=bg)
+    style.configure('TLabel', background=bg, foreground=fg)
+    style.configure('TButton', background=bg, foreground=fg)
+    style.configure('TCombobox', fieldbackground=bg, background=bg, foreground=fg)
+    root.configure(bg=bg)
 
 # tab for displaying vpns
 def add_vpn_tab(notebook):
@@ -37,10 +55,11 @@ def add_vpn_tab(notebook):
 
     profile_selector = ttk.Combobox(right_frame, state="readonly", values=get_profile_names())
     profile_selector.pack(pady=2)
+    if selected_profile:
+        profile_selector.set(selected_profile)
 
     def update_selected_profile(event):
-        global selected_profile
-        selected_profile = profile_selector.get()
+        set_selected_profile(profile_selector.get())
 
     profile_selector.bind("<<ComboboxSelected>>", update_selected_profile)
 
@@ -114,6 +133,7 @@ def add_profile_tab(notebook):
             return
         add_profile(name, user, pwd)
         selected_profile_var.set(name)
+        set_selected_profile(name)
         refresh_profile_dropdown()
         messagebox.showinfo("Saved", f"Profile '{name}' saved successfully.")
 
@@ -122,10 +142,22 @@ def add_profile_tab(notebook):
         menu.delete(0, "end")
         for name in get_profile_names():
             menu.add_command(label=name, command=tk._setit(selected_profile_var, name))
+        if selected_profile:
+            selected_profile_var.set(selected_profile)
+        elif get_profile_names():
+            selected_profile_var.set(get_profile_names()[0])
+        if selected_profile_var.get():
+            set_selected_profile(selected_profile_var.get())
+
+    def option_selected(value):
+        set_selected_profile(value)
 
     tk.Label(profile_tab, text="Select Profile:").pack(pady=5)
-    profile_menu = tk.OptionMenu(profile_tab, selected_profile_var, "")
+    profile_menu = tk.OptionMenu(profile_tab, selected_profile_var, "", command=option_selected)
     profile_menu.pack(pady=5)
+
+    # populate dropdown with stored profiles
+    refresh_profile_dropdown()
 
     tk.Label(profile_tab, text="Profile Name:").pack(pady=2)
     name_entry = tk.Entry(profile_tab)
@@ -142,10 +174,26 @@ def add_profile_tab(notebook):
     tk.Button(profile_tab, text="Save Profile", command=save_profile).pack(pady=10)
 
 # tab for system settings
-def add_settings_tab(notebook):
+def add_settings_tab(notebook, root):
     settings_tab = tk.Frame(notebook)
     notebook.add(settings_tab, text="System Settings")
-    tk.Label(settings_tab, text="This is the Settings tab").pack(pady=20)
+
+    tk.Label(settings_tab, text="Select Theme:").pack(pady=5)
+    theme_var = tk.StringVar(value=theme_config.active_theme)
+    theme_dropdown = ttk.Combobox(
+        settings_tab,
+        state="readonly",
+        values=list(theme_config.themes.keys()),
+        textvariable=theme_var,
+    )
+    theme_dropdown.pack(pady=5)
+
+    def apply_selected(event=None):
+        theme_config.set_active_theme(theme_var.get())
+        apply_theme(root)
+
+    theme_dropdown.bind("<<ComboboxSelected>>", apply_selected)
+    tk.Button(settings_tab, text="Apply", command=apply_selected).pack(pady=10)
 
 def build_tabs(root):
     notebook = ttk.Notebook(root)
@@ -153,4 +201,5 @@ def build_tabs(root):
 
     add_vpn_tab(notebook)
     add_profile_tab(notebook)
-    add_settings_tab(notebook)
+    add_settings_tab(notebook, root)
+    apply_theme(root)

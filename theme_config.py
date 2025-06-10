@@ -3,31 +3,53 @@ import os
 
 THEMES_FILE = "themes.ini"
 
+# Default theme definitions including additional values for tab colors
 DEFAULT_THEMES = {
     "light": {
         "bg": "255,255,255",
         "fg": "0,0,0",
         "panel_bg": "240,240,240",
         "button_bg": "230,230,230",
+        "tab_bg": "230,230,230",
+        "tab_active_bg": "210,210,210",
     },
     "dark": {
         "bg": "45,45,45",
         "fg": "220,220,220",
         "panel_bg": "55,55,55",
         "button_bg": "70,70,70",
+        "tab_bg": "60,60,60",
+        "tab_active_bg": "75,75,75",
     },
-    "light": {"bg": "255,255,255", "fg": "0,0,0"},
-    "dark": {"bg": "45,45,45", "fg": "220,220,220"},
+    "dark-blue": {
+        "bg": "10,25,55",
+        "fg": "173,216,230",
+        "panel_bg": "20,35,70",
+        "button_bg": "30,50,90",
+        "tab_bg": "25,40,80",
+        "tab_active_bg": "40,55,100",
+    },
+    "dark-green": {
+        "bg": "10,55,25",
+        "fg": "144,238,144",
+        "panel_bg": "20,70,35",
+        "button_bg": "30,90,50",
+        "tab_bg": "25,80,45",
+        "tab_active_bg": "40,100,60",
+    },
 }
 
 themes = {}
 active_theme = "light"
 
+
 def _rgb_to_tuple(s):
     return tuple(int(x) for x in s.split(','))
 
+
 def _tuple_to_rgb(t):
     return ','.join(str(x) for x in t)
+
 
 def _write_default():
     config = configparser.ConfigParser()
@@ -37,7 +59,9 @@ def _write_default():
     with open(THEMES_FILE, "w", encoding="utf-8") as f:
         config.write(f)
 
+
 def load_themes():
+    """Load themes from the config file."""
     global themes, active_theme
     if not os.path.exists(THEMES_FILE):
         _write_default()
@@ -48,20 +72,12 @@ def load_themes():
     for section in cfg.sections():
         if section == "DEFAULT":
             continue
-        defaults = DEFAULT_THEMES.get(section, DEFAULT_THEMES.get("light"))
-        bg = _rgb_to_tuple(cfg[section].get("bg", defaults["bg"]))
-        fg = _rgb_to_tuple(cfg[section].get("fg", defaults["fg"]))
-        panel_bg = _rgb_to_tuple(cfg[section].get("panel_bg", defaults.get("panel_bg", defaults["bg"])))
-        button_bg = _rgb_to_tuple(cfg[section].get("button_bg", defaults.get("button_bg", defaults["bg"])))
-        themes[section] = {
-            "bg": bg,
-            "fg": fg,
-            "panel_bg": panel_bg,
-            "button_bg": button_bg,
-        }
-        bg = _rgb_to_tuple(cfg[section].get("bg", "255,255,255"))
-        fg = _rgb_to_tuple(cfg[section].get("fg", "0,0,0"))
-        themes[section] = {"bg": bg, "fg": fg}
+        defaults = DEFAULT_THEMES.get(section, DEFAULT_THEMES["light"])
+        values = {}
+        for key, default in defaults.items():
+            values[key] = _rgb_to_tuple(cfg[section].get(key, default))
+        themes[section] = values
+
 
 def save_themes():
     cfg = configparser.ConfigParser()
@@ -71,14 +87,16 @@ def save_themes():
     with open(THEMES_FILE, "w", encoding="utf-8") as f:
         cfg.write(f)
 
+
 def set_active_theme(name):
     global active_theme
     if name in themes:
         active_theme = name
         save_themes()
 
+
 def to_hex(rgb_tuple):
     return "#%02x%02x%02x" % rgb_tuple
 
-# load at import
+# Load themes on import
 load_themes()

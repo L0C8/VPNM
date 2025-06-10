@@ -13,15 +13,21 @@ def apply_theme(root):
     theme = theme_config.themes.get(theme_config.active_theme)
     if not theme:
         return
-    bg = theme_config.to_hex(theme['bg'])
-    fg = theme_config.to_hex(theme['fg'])
-    panel_bg = theme_config.to_hex(theme.get('panel_bg', theme['bg']))
-    button_bg = theme_config.to_hex(theme.get('button_bg', theme['bg']))
+    bg = theme_config.to_hex(theme["bg"])
+    fg = theme_config.to_hex(theme["fg"])
+    panel_bg = theme_config.to_hex(theme.get("panel_bg", theme["bg"]))
+    button_bg = theme_config.to_hex(theme.get("button_bg", theme["bg"]))
+    tab_bg = theme_config.to_hex(theme.get("tab_bg", panel_bg))
+    tab_active_bg = theme_config.to_hex(theme.get("tab_active_bg", tab_bg))
+
     style = ttk.Style()
-    style.configure('TFrame', background=panel_bg)
-    style.configure('TLabel', background=panel_bg, foreground=fg)
-    style.configure('TButton', background=button_bg, foreground=fg)
-    style.configure('TCombobox', fieldbackground=panel_bg, background=panel_bg, foreground=fg)
+    style.configure("TFrame", background=panel_bg)
+    style.configure("TLabel", background=panel_bg, foreground=fg)
+    style.configure("TButton", background=button_bg, foreground=fg)
+    style.configure("TCombobox", fieldbackground=panel_bg, background=panel_bg, foreground=fg)
+    style.configure("TNotebook", background=panel_bg)
+    style.configure("TNotebook.Tab", background=tab_bg, foreground=fg)
+    style.map("TNotebook.Tab", background=[("selected", tab_active_bg)])
     root.configure(bg=bg)
 
     def recurse(w):
@@ -39,12 +45,6 @@ def apply_theme(root):
             recurse(child)
 
     recurse(root)
-    style = ttk.Style()
-    style.configure('TFrame', background=bg)
-    style.configure('TLabel', background=bg, foreground=fg)
-    style.configure('TButton', background=bg, foreground=fg)
-    style.configure('TCombobox', fieldbackground=bg, background=bg, foreground=fg)
-    root.configure(bg=bg)
 
 # tab for displaying vpns
 def add_vpn_tab(notebook):

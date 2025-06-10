@@ -13,15 +13,60 @@ def apply_theme(root):
     theme = theme_config.themes.get(theme_config.active_theme)
     if not theme:
         return
-    bg = theme_config.to_hex(theme['bg'])
-    fg = theme_config.to_hex(theme['fg'])
-    panel_bg = theme_config.to_hex(theme.get('panel_bg', theme['bg']))
-    button_bg = theme_config.to_hex(theme.get('button_bg', theme['bg']))
+    bg = theme_config.to_hex(theme["bg"])
+    fg = theme_config.to_hex(theme["fg"])
+    panel_bg = theme_config.to_hex(theme.get("panel_bg", theme["bg"]))
+    button_bg = theme_config.to_hex(theme.get("button_bg", theme["bg"]))
+    dropdown_bg = theme_config.to_hex(theme.get("dropdown_bg", panel_bg))
+    dropdown_fg = theme_config.to_hex(theme.get("dropdown_fg", fg))
+    tab_bg = theme_config.to_hex(theme.get("tab_bg", panel_bg))
+    tab_active_bg = theme_config.to_hex(theme.get("tab_active_bg", tab_bg))
+    tree_bg = theme_config.to_hex(theme.get("tree_bg", panel_bg))
+    tree_fg = theme_config.to_hex(theme.get("tree_fg", fg))
+    tree_select_bg = theme_config.to_hex(theme.get("tree_select_bg", button_bg))
+    tree_select_fg = theme_config.to_hex(theme.get("tree_select_fg", fg))
+    tree_heading_bg = theme_config.to_hex(theme.get("tree_heading_bg", panel_bg))
+    tree_heading_fg = theme_config.to_hex(theme.get("tree_heading_fg", fg))
+
     style = ttk.Style()
-    style.configure('TFrame', background=panel_bg)
-    style.configure('TLabel', background=panel_bg, foreground=fg)
-    style.configure('TButton', background=button_bg, foreground=fg)
-    style.configure('TCombobox', fieldbackground=panel_bg, background=panel_bg, foreground=fg)
+    style.configure("TFrame", background=panel_bg)
+    style.configure("TLabel", background=panel_bg, foreground=fg)
+    style.configure("TButton", background=button_bg, foreground=fg)
+    style.configure(
+        "TCombobox",
+        fieldbackground=dropdown_bg,
+        background=dropdown_bg,
+        foreground=dropdown_fg,
+        selectbackground=dropdown_bg,
+        selectforeground=dropdown_fg,
+    )
+    style.map(
+        "TCombobox",
+        fieldbackground=[("readonly", dropdown_bg)],
+        selectbackground=[("readonly", dropdown_bg)],
+        selectforeground=[("readonly", dropdown_fg)],
+        background=[("readonly", dropdown_bg)],
+        foreground=[("readonly", dropdown_fg)],
+    )
+    style.configure(
+        "Treeview",
+        background=tree_bg,
+        fieldbackground=tree_bg,
+        foreground=tree_fg,
+    )
+    style.map(
+        "Treeview",
+        background=[("selected", tree_select_bg)],
+        foreground=[("selected", tree_select_fg)],
+    )
+    style.configure(
+        "Treeview.Heading",
+        background=tree_heading_bg,
+        foreground=tree_heading_fg,
+    )
+    style.configure("TNotebook", background=panel_bg)
+    style.configure("TNotebook.Tab", background=tab_bg, foreground=fg)
+    style.map("TNotebook.Tab", background=[("selected", tab_active_bg)])
     root.configure(bg=bg)
 
     def recurse(w):
@@ -36,15 +81,12 @@ def apply_theme(root):
                 # Skip ttk widgets like Combobox which inherit from tk.Entry but
                 # don't support the classic Tk options
                 child.configure(bg=panel_bg, fg=fg, insertbackground=fg)
+            elif isinstance(child, tk.OptionMenu):
+                child.configure(bg=dropdown_bg, fg=dropdown_fg, activebackground=dropdown_bg)
+                child["menu"].configure(bg=dropdown_bg, fg=dropdown_fg)
             recurse(child)
 
     recurse(root)
-    style = ttk.Style()
-    style.configure('TFrame', background=bg)
-    style.configure('TLabel', background=bg, foreground=fg)
-    style.configure('TButton', background=bg, foreground=fg)
-    style.configure('TCombobox', fieldbackground=bg, background=bg, foreground=fg)
-    root.configure(bg=bg)
 
 # tab for displaying vpns
 def add_vpn_tab(notebook):

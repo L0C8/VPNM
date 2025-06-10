@@ -18,6 +18,8 @@ DEFAULT_THEMES = {
         "tree_fg": "0,0,0",
         "tree_select_bg": "200,200,200",
         "tree_select_fg": "0,0,0",
+        "tree_heading_bg": "230,230,230",
+        "tree_heading_fg": "0,0,0",
     },
     "dark": {
         "bg": "45,45,45",
@@ -32,6 +34,8 @@ DEFAULT_THEMES = {
         "tree_fg": "220,220,220",
         "tree_select_bg": "70,70,70",
         "tree_select_fg": "220,220,220",
+        "tree_heading_bg": "60,60,60",
+        "tree_heading_fg": "220,220,220",
     },
     "dark-blue": {
         "bg": "10,25,55",
@@ -46,6 +50,8 @@ DEFAULT_THEMES = {
         "tree_fg": "173,216,230",
         "tree_select_bg": "40,55,100",
         "tree_select_fg": "173,216,230",
+        "tree_heading_bg": "25,40,80",
+        "tree_heading_fg": "173,216,230",
     },
     "dark-green": {
         "bg": "10,55,25",
@@ -60,6 +66,8 @@ DEFAULT_THEMES = {
         "tree_fg": "144,238,144",
         "tree_select_bg": "40,100,60",
         "tree_select_fg": "144,238,144",
+        "tree_heading_bg": "25,80,45",
+        "tree_heading_fg": "144,238,144",
     },
 }
 

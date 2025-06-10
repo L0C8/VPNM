@@ -25,6 +25,8 @@ def apply_theme(root):
     tree_fg = theme_config.to_hex(theme.get("tree_fg", fg))
     tree_select_bg = theme_config.to_hex(theme.get("tree_select_bg", button_bg))
     tree_select_fg = theme_config.to_hex(theme.get("tree_select_fg", fg))
+    tree_heading_bg = theme_config.to_hex(theme.get("tree_heading_bg", panel_bg))
+    tree_heading_fg = theme_config.to_hex(theme.get("tree_heading_fg", fg))
 
     style = ttk.Style()
     style.configure("TFrame", background=panel_bg)
@@ -35,6 +37,16 @@ def apply_theme(root):
         fieldbackground=dropdown_bg,
         background=dropdown_bg,
         foreground=dropdown_fg,
+        selectbackground=dropdown_bg,
+        selectforeground=dropdown_fg,
+    )
+    style.map(
+        "TCombobox",
+        fieldbackground=[("readonly", dropdown_bg)],
+        selectbackground=[("readonly", dropdown_bg)],
+        selectforeground=[("readonly", dropdown_fg)],
+        background=[("readonly", dropdown_bg)],
+        foreground=[("readonly", dropdown_fg)],
     )
     style.configure(
         "Treeview",
@@ -46,6 +58,11 @@ def apply_theme(root):
         "Treeview",
         background=[("selected", tree_select_bg)],
         foreground=[("selected", tree_select_fg)],
+    )
+    style.configure(
+        "Treeview.Heading",
+        background=tree_heading_bg,
+        foreground=tree_heading_fg,
     )
     style.configure("TNotebook", background=panel_bg)
     style.configure("TNotebook.Tab", background=tab_bg, foreground=fg)

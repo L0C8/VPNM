@@ -15,28 +15,6 @@ def apply_theme(root):
         return
     bg = theme_config.to_hex(theme['bg'])
     fg = theme_config.to_hex(theme['fg'])
-    panel_bg = theme_config.to_hex(theme.get('panel_bg', theme['bg']))
-    button_bg = theme_config.to_hex(theme.get('button_bg', theme['bg']))
-    style = ttk.Style()
-    style.configure('TFrame', background=panel_bg)
-    style.configure('TLabel', background=panel_bg, foreground=fg)
-    style.configure('TButton', background=button_bg, foreground=fg)
-    style.configure('TCombobox', fieldbackground=panel_bg, background=panel_bg, foreground=fg)
-    root.configure(bg=bg)
-
-    def recurse(w):
-        for child in w.winfo_children():
-            if isinstance(child, tk.Frame):
-                child.configure(bg=panel_bg)
-            elif isinstance(child, tk.Label):
-                child.configure(bg=panel_bg, fg=fg)
-            elif isinstance(child, tk.Button):
-                child.configure(bg=button_bg, fg=fg, activebackground=button_bg)
-            elif isinstance(child, tk.Entry):
-                child.configure(bg=panel_bg, fg=fg, insertbackground=fg)
-            recurse(child)
-
-    recurse(root)
     style = ttk.Style()
     style.configure('TFrame', background=bg)
     style.configure('TLabel', background=bg, foreground=fg)
@@ -53,7 +31,7 @@ def add_vpn_tab(notebook):
     left_frame = tk.Frame(vpn_tab)
     left_frame.pack(side="left", fill="both", expand=True, padx=5, pady=5)
 
-    right_frame = tk.Frame(vpn_tab)
+    right_frame = tk.Frame(vpn_tab, bg="#f0f0f0")
     right_frame.pack(side="right", fill="both", expand=True, padx=5, pady=5)
 
     # Left side: Treeview

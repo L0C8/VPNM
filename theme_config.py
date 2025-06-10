@@ -4,18 +4,6 @@ import os
 THEMES_FILE = "themes.ini"
 
 DEFAULT_THEMES = {
-    "light": {
-        "bg": "255,255,255",
-        "fg": "0,0,0",
-        "panel_bg": "240,240,240",
-        "button_bg": "230,230,230",
-    },
-    "dark": {
-        "bg": "45,45,45",
-        "fg": "220,220,220",
-        "panel_bg": "55,55,55",
-        "button_bg": "70,70,70",
-    },
     "light": {"bg": "255,255,255", "fg": "0,0,0"},
     "dark": {"bg": "45,45,45", "fg": "220,220,220"},
 }
@@ -48,17 +36,6 @@ def load_themes():
     for section in cfg.sections():
         if section == "DEFAULT":
             continue
-        defaults = DEFAULT_THEMES.get(section, DEFAULT_THEMES.get("light"))
-        bg = _rgb_to_tuple(cfg[section].get("bg", defaults["bg"]))
-        fg = _rgb_to_tuple(cfg[section].get("fg", defaults["fg"]))
-        panel_bg = _rgb_to_tuple(cfg[section].get("panel_bg", defaults.get("panel_bg", defaults["bg"])))
-        button_bg = _rgb_to_tuple(cfg[section].get("button_bg", defaults.get("button_bg", defaults["bg"])))
-        themes[section] = {
-            "bg": bg,
-            "fg": fg,
-            "panel_bg": panel_bg,
-            "button_bg": button_bg,
-        }
         bg = _rgb_to_tuple(cfg[section].get("bg", "255,255,255"))
         fg = _rgb_to_tuple(cfg[section].get("fg", "0,0,0"))
         themes[section] = {"bg": bg, "fg": fg}

@@ -37,6 +37,12 @@ def apply_theme(root):
             recurse(child)
 
     recurse(root)
+    style = ttk.Style()
+    style.configure('TFrame', background=bg)
+    style.configure('TLabel', background=bg, foreground=fg)
+    style.configure('TButton', background=bg, foreground=fg)
+    style.configure('TCombobox', fieldbackground=bg, background=bg, foreground=fg)
+    root.configure(bg=bg)
 
 # tab for displaying vpns
 def add_vpn_tab(notebook):

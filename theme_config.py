@@ -16,6 +16,8 @@ DEFAULT_THEMES = {
         "panel_bg": "55,55,55",
         "button_bg": "70,70,70",
     },
+    "light": {"bg": "255,255,255", "fg": "0,0,0"},
+    "dark": {"bg": "45,45,45", "fg": "220,220,220"},
 }
 
 themes = {}
@@ -57,6 +59,9 @@ def load_themes():
             "panel_bg": panel_bg,
             "button_bg": button_bg,
         }
+        bg = _rgb_to_tuple(cfg[section].get("bg", "255,255,255"))
+        fg = _rgb_to_tuple(cfg[section].get("fg", "0,0,0"))
+        themes[section] = {"bg": bg, "fg": fg}
 
 def save_themes():
     cfg = configparser.ConfigParser()

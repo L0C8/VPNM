@@ -93,8 +93,10 @@ def apply_theme(root):
                 # Skip ttk widgets like Combobox which inherit from tk.Entry but
                 # don't support the classic Tk options
                 child.configure(bg=panel_bg, fg=fg, insertbackground=fg)
-            elif isinstance(child, (tk.OptionMenu, ttk.OptionMenu)):
+            elif isinstance(child, tk.OptionMenu):
                 child.configure(bg=dropdown_bg, fg=dropdown_fg, activebackground=dropdown_bg)
+                child["menu"].configure(bg=dropdown_bg, fg=dropdown_fg)
+            elif isinstance(child, ttk.OptionMenu):
                 child["menu"].configure(bg=dropdown_bg, fg=dropdown_fg)
             recurse(child)
 

@@ -38,6 +38,9 @@ def apply_theme(root):
     style.configure("TFrame", background=panel_bg)
     style.configure("TLabel", background=panel_bg, foreground=fg)
     style.configure("TButton", background=button_bg, foreground=fg)
+    style.configure("TLabelframe", background=panel_bg)
+    style.configure("TLabelframe.Label", background=panel_bg, foreground=fg)
+    style.configure("TEntry", fieldbackground=panel_bg, foreground=fg)
     style.configure(
         "TCombobox",
         fieldbackground=dropdown_bg,
@@ -45,6 +48,7 @@ def apply_theme(root):
         foreground=dropdown_fg,
         selectbackground=dropdown_bg,
         selectforeground=dropdown_fg,
+        arrowcolor=dropdown_fg,
     )
     style.map(
         "TCombobox",
@@ -53,6 +57,7 @@ def apply_theme(root):
         selectforeground=[("readonly", dropdown_fg)],
         background=[("readonly", dropdown_bg)],
         foreground=[("readonly", dropdown_fg)],
+        arrowcolor=[("readonly", dropdown_fg)],
     )
     style.configure(
         "Treeview",

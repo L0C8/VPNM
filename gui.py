@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
+from tkinter import filedialog, messagebox
+from tkinter import ttk
 import os
 from vpn_controller import *
 from config import profiles, selected_profile, add_profile, get_profile_names, get_profile, profile_selector_widget, set_selected_profile, load_profiles
@@ -32,6 +33,17 @@ def apply_theme(root):
     style.configure("TFrame", background=panel_bg)
     style.configure("TLabel", background=panel_bg, foreground=fg)
     style.configure("TButton", background=button_bg, foreground=fg)
+    style.configure(
+        "TEntry",
+        fieldbackground=panel_bg,
+        background=panel_bg,
+        foreground=fg,
+    )
+    style.configure(
+        "TMenubutton",
+        background=dropdown_bg,
+        foreground=dropdown_fg,
+    )
     style.configure(
         "TCombobox",
         fieldbackground=dropdown_bg,
@@ -71,17 +83,17 @@ def apply_theme(root):
 
     def recurse(w):
         for child in w.winfo_children():
-            if isinstance(child, tk.Frame):
+            if isinstance(child, tk.Frame) and not isinstance(child, ttk.Frame):
                 child.configure(bg=panel_bg)
-            elif isinstance(child, tk.Label):
+            elif isinstance(child, tk.Label) and not isinstance(child, ttk.Label):
                 child.configure(bg=panel_bg, fg=fg)
-            elif isinstance(child, tk.Button):
+            elif isinstance(child, tk.Button) and not isinstance(child, ttk.Button):
                 child.configure(bg=button_bg, fg=fg, activebackground=button_bg)
             elif isinstance(child, tk.Entry) and not isinstance(child, ttk.Entry):
                 # Skip ttk widgets like Combobox which inherit from tk.Entry but
                 # don't support the classic Tk options
                 child.configure(bg=panel_bg, fg=fg, insertbackground=fg)
-            elif isinstance(child, tk.OptionMenu):
+            elif isinstance(child, (tk.OptionMenu, ttk.OptionMenu)):
                 child.configure(bg=dropdown_bg, fg=dropdown_fg, activebackground=dropdown_bg)
                 child["menu"].configure(bg=dropdown_bg, fg=dropdown_fg)
             recurse(child)
@@ -90,18 +102,18 @@ def apply_theme(root):
 
 # tab for displaying vpns
 def add_vpn_tab(notebook):
-    vpn_tab = tk.Frame(notebook)
+    vpn_tab = ttk.Frame(notebook)
     notebook.add(vpn_tab, text="Manage VPNs")
 
     # Create left and right panels
-    left_frame = tk.Frame(vpn_tab)
+    left_frame = ttk.Frame(vpn_tab)
     left_frame.pack(side="left", fill="both", expand=True, padx=5, pady=5)
 
-    right_frame = tk.Frame(vpn_tab)
+    right_frame = ttk.Frame(vpn_tab)
     right_frame.pack(side="right", fill="both", expand=True, padx=5, pady=5)
 
     # Left side: Treeview
-    label = tk.Label(left_frame, text="Current VPN Configurations:")
+    label = ttk.Label(left_frame, text="Current VPN Configurations:")
     label.pack(pady=10)
 
     tree = ttk.Treeview(left_frame, columns=("Name",), show="headings")
@@ -116,7 +128,7 @@ def add_vpn_tab(notebook):
     refresh_tree()
 
     # profile selector dropdown
-    profile_label = tk.Label(right_frame, text="Active Profile")
+    profile_label = ttk.Label(right_frame, text="Active Profile")
     profile_label.pack(pady=(10, 2))
 
     profile_selector = ttk.Combobox(right_frame, state="readonly", values=get_profile_names())
@@ -167,11 +179,11 @@ def add_vpn_tab(notebook):
             delete_all_vpns()
             refresh_tree()
 
-    tk.Button(right_frame, text="Import VPN", command=import_vpn_action).pack(pady=10)
-    tk.Button(right_frame, text="Bulk Import Folder", command=bulk_import_action).pack(pady=10)
-    tk.Button(right_frame, text="Delete Selected VPN", command=lambda: delete_selected(tree, refresh_tree)).pack(pady=10)
-    tk.Button(right_frame, text="Delete ALL VPNs", command=delete_all_action).pack(pady=10)
-    tk.Button(right_frame, text="Refresh List", command=refresh_tree).pack(pady=10)
+    ttk.Button(right_frame, text="Import VPN", command=import_vpn_action).pack(pady=10)
+    ttk.Button(right_frame, text="Bulk Import Folder", command=bulk_import_action).pack(pady=10)
+    ttk.Button(right_frame, text="Delete Selected VPN", command=lambda: delete_selected(tree, refresh_tree)).pack(pady=10)
+    ttk.Button(right_frame, text="Delete ALL VPNs", command=delete_all_action).pack(pady=10)
+    ttk.Button(right_frame, text="Refresh List", command=refresh_tree).pack(pady=10)
 
 def delete_selected(tree, refresh_func):
     selected = tree.selection()
@@ -185,7 +197,7 @@ def delete_selected(tree, refresh_func):
 
 # tab for user data
 def add_profile_tab(notebook):
-    profile_tab = tk.Frame(notebook)
+    profile_tab = ttk.Frame(notebook)
     notebook.add(profile_tab, text="Manage Profile")
 
     selected_profile_var = tk.StringVar()
@@ -218,33 +230,33 @@ def add_profile_tab(notebook):
     def option_selected(value):
         set_selected_profile(value)
 
-    tk.Label(profile_tab, text="Select Profile:").pack(pady=5)
-    profile_menu = tk.OptionMenu(profile_tab, selected_profile_var, "", command=option_selected)
+    ttk.Label(profile_tab, text="Select Profile:").pack(pady=5)
+    profile_menu = ttk.OptionMenu(profile_tab, selected_profile_var, None, command=option_selected)
     profile_menu.pack(pady=5)
 
     # populate dropdown with stored profiles
     refresh_profile_dropdown()
 
-    tk.Label(profile_tab, text="Profile Name:").pack(pady=2)
-    name_entry = tk.Entry(profile_tab)
+    ttk.Label(profile_tab, text="Profile Name:").pack(pady=2)
+    name_entry = ttk.Entry(profile_tab)
     name_entry.pack(pady=2)
 
-    tk.Label(profile_tab, text="Username:").pack(pady=2)
-    user_entry = tk.Entry(profile_tab)
+    ttk.Label(profile_tab, text="Username:").pack(pady=2)
+    user_entry = ttk.Entry(profile_tab)
     user_entry.pack(pady=2)
 
-    tk.Label(profile_tab, text="Password:").pack(pady=2)
-    pass_entry = tk.Entry(profile_tab, show="*")
+    ttk.Label(profile_tab, text="Password:").pack(pady=2)
+    pass_entry = ttk.Entry(profile_tab, show="*")
     pass_entry.pack(pady=2)
 
-    tk.Button(profile_tab, text="Save Profile", command=save_profile).pack(pady=10)
+    ttk.Button(profile_tab, text="Save Profile", command=save_profile).pack(pady=10)
 
 # tab for system settings
 def add_settings_tab(notebook, root):
-    settings_tab = tk.Frame(notebook)
+    settings_tab = ttk.Frame(notebook)
     notebook.add(settings_tab, text="System Settings")
 
-    tk.Label(settings_tab, text="Select Theme:").pack(pady=5)
+    ttk.Label(settings_tab, text="Select Theme:").pack(pady=5)
     theme_var = tk.StringVar(value=theme_config.active_theme)
     theme_dropdown = ttk.Combobox(
         settings_tab,
@@ -259,7 +271,7 @@ def add_settings_tab(notebook, root):
         apply_theme(root)
 
     theme_dropdown.bind("<<ComboboxSelected>>", apply_selected)
-    tk.Button(settings_tab, text="Apply", command=apply_selected).pack(pady=10)
+    ttk.Button(settings_tab, text="Apply", command=apply_selected).pack(pady=10)
 
 def build_tabs(root):
     notebook = ttk.Notebook(root)

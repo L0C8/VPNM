@@ -38,6 +38,9 @@ def apply_theme(root):
     style.configure("TFrame", background=panel_bg)
     style.configure("TLabel", background=panel_bg, foreground=fg)
     style.configure("TButton", background=button_bg, foreground=fg)
+    style.configure("TLabelframe", background=panel_bg)
+    style.configure("TLabelframe.Label", background=panel_bg, foreground=fg)
+    style.configure("TEntry", fieldbackground=panel_bg, foreground=fg)
     style.configure(
         "TCombobox",
         fieldbackground=dropdown_bg,

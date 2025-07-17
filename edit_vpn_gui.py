@@ -53,16 +53,20 @@ def apply_theme(root):
     recurse(root)
 
 
-def open_edit_vpn_window(parent=None):
+def open_edit_vpn_window(parent=None, vpn_name=None):
     win = tk.Toplevel(parent) if parent else tk.Toplevel()
     win.title("Edit VPN")
     win.geometry("400x300")
     win.resizable(False, False)
+    button_width = 12 
 
-    tk.Label(win, text="Select VPN:").pack(pady=(10, 2))
-    vpn_var = tk.StringVar()
-    vpn_dropdown = ttk.Combobox(win, state="readonly", values=get_all_vpn_names(), textvariable=vpn_var)
-    vpn_dropdown.pack(pady=2)
+    vpn_var = tk.StringVar(value=vpn_name if vpn_name else "")
+    if vpn_name:
+        tk.Label(win, text=f"VPN: {vpn_name}").pack(pady=(10, 2))
+    else:
+        tk.Label(win, text="Select VPN:").pack(pady=(10, 2))
+        vpn_dropdown = ttk.Combobox(win, state="readonly", values=get_all_vpn_names(), textvariable=vpn_var)
+        vpn_dropdown.pack(pady=2)
 
     tk.Label(win, text="Profile:").pack(pady=(10, 2))
     profile_var = tk.StringVar(value=selected_profile if selected_profile else "")
@@ -74,7 +78,7 @@ def open_edit_vpn_window(parent=None):
     user_entry.pack(pady=2)
 
     tk.Label(win, text="Password:").pack(pady=(10, 2))
-    pass_entry = tk.Entry(win, show="*")
+    pass_entry = tk.Entry(win)
     pass_entry.pack(pady=2)
 
     def load_profile(event=None):
@@ -103,7 +107,12 @@ def open_edit_vpn_window(parent=None):
         messagebox.showinfo("Saved", f"Updated VPN '{name}'.")
         win.destroy()
 
-    tk.Button(win, text="Save", command=save).pack(pady=10)
+    btn_frame = tk.Frame(win)
+    btn_frame.pack(pady=10)
+    cancel_btn = tk.Button(btn_frame, text="Cancel", command=win.destroy, width=button_width)
+    cancel_btn.pack(side="left", padx=5)
+    save_btn = tk.Button(btn_frame, text="Save", command=save, width=button_width)
+    save_btn.pack(side="left", padx=5)
 
     apply_theme(win)
     win.grab_set()

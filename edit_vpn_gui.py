@@ -58,6 +58,7 @@ def open_edit_vpn_window(parent=None, vpn_name=None):
     win.title("Edit VPN")
     win.geometry("400x300")
     win.resizable(False, False)
+    button_width = 12 
 
     vpn_var = tk.StringVar(value=vpn_name if vpn_name else "")
     if vpn_name:
@@ -106,7 +107,12 @@ def open_edit_vpn_window(parent=None, vpn_name=None):
         messagebox.showinfo("Saved", f"Updated VPN '{name}'.")
         win.destroy()
 
-    tk.Button(win, text="Save", command=save).pack(pady=10)
+    btn_frame = tk.Frame(win)
+    btn_frame.pack(pady=10)
+    cancel_btn = tk.Button(btn_frame, text="Cancel", command=win.destroy, width=button_width)
+    cancel_btn.pack(side="left", padx=5)
+    save_btn = tk.Button(btn_frame, text="Save", command=save, width=button_width)
+    save_btn.pack(side="left", padx=5)
 
     apply_theme(win)
     win.grab_set()

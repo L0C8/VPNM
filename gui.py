@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import os
 from vpn_controller import *
+from edit_vpn_gui import open_edit_vpn_window
 from config import profiles, selected_profile, add_profile, get_profile_names, get_profile, profile_selector_widget, set_selected_profile, load_profiles
 import theme_config
 
@@ -169,6 +170,7 @@ def add_vpn_tab(notebook):
 
     tk.Button(right_frame, text="Import VPN", command=import_vpn_action).pack(pady=10)
     tk.Button(right_frame, text="Bulk Import Folder", command=bulk_import_action).pack(pady=10)
+    tk.Button(right_frame, text="Edit VPN", command=lambda: open_edit_vpn_window(vpn_tab.winfo_toplevel())).pack(pady=10)
     tk.Button(right_frame, text="Delete Selected VPN", command=lambda: delete_selected(tree, refresh_tree)).pack(pady=10)
     tk.Button(right_frame, text="Delete ALL VPNs", command=delete_all_action).pack(pady=10)
     tk.Button(right_frame, text="Refresh List", command=refresh_tree).pack(pady=10)

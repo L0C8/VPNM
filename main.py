@@ -6,7 +6,8 @@ from gui import build_tabs
 def main():
     root = tk.Tk()
     root.title("VPN Manager")
-    root.geometry("600x400")
+    root.geometry("600x500")
+    root.resizable(False, False)
 
     build_tabs(root)
 

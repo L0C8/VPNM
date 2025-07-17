@@ -35,3 +35,10 @@ def disconnect_vpn(name):
 def set_autoconnect(name, enabled=True):
     flag = "yes" if enabled else "no"
     subprocess.run(["nmcli", "connection", "modify", name, "connection.autoconnect", flag])
+
+
+def update_vpn_credentials(name, username, password):
+    """Update an existing VPN connection with new credentials."""
+    subprocess.run(["nmcli", "connection", "modify", name, "vpn.user-name", username])
+    subprocess.run(["nmcli", "connection", "modify", name, "+vpn.data", "password-flags=0"])
+    subprocess.run(["nmcli", "connection", "modify", name, "vpn.secrets", f"password={password}"])

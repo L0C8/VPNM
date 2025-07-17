@@ -170,7 +170,15 @@ def add_vpn_tab(notebook):
 
     tk.Button(right_frame, text="Import VPN", command=import_vpn_action).pack(pady=10)
     tk.Button(right_frame, text="Bulk Import Folder", command=bulk_import_action).pack(pady=10)
-    tk.Button(right_frame, text="Edit VPN", command=lambda: open_edit_vpn_window(vpn_tab.winfo_toplevel())).pack(pady=10)
+    def edit_selected_action():
+        sel = tree.selection()
+        if not sel:
+            messagebox.showwarning("No Selection", "Please select a VPN to edit.")
+            return
+        name = tree.item(sel[0], "values")[0]
+        open_edit_vpn_window(vpn_tab.winfo_toplevel(), name)
+
+    tk.Button(right_frame, text="Edit VPN", command=edit_selected_action).pack(pady=10)
     tk.Button(right_frame, text="Delete Selected VPN", command=lambda: delete_selected(tree, refresh_tree)).pack(pady=10)
     tk.Button(right_frame, text="Delete ALL VPNs", command=delete_all_action).pack(pady=10)
     tk.Button(right_frame, text="Refresh List", command=refresh_tree).pack(pady=10)

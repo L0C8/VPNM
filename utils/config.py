@@ -53,9 +53,15 @@ def get_profile(name):
     return profiles.get(name, None)
 
 def delete_profile(name):
-    global profiles
+    """Remove a stored profile by name."""
+    global profiles, selected_profile
     if name in profiles:
         del profiles[name]
+        if selected_profile == name:
+            selected_profile = None
+        if profile_selector_widget:
+            profile_selector_widget.configure(values=get_profile_names())
+            profile_selector_widget.set(selected_profile or "")
         save_profiles()
 
 # Update profile credentials

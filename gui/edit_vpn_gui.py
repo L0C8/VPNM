@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from config import get_profile_names, get_profile, selected_profile
-from vpn_controller import get_all_vpn_names, update_vpn_credentials
-import theme_config
+from utils.config import get_profile_names, get_profile, selected_profile
+from utils.vpn_controller import get_all_vpn_names, update_vpn_credentials
+from utils import theme_config
 
 
 def apply_theme(root):

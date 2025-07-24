@@ -1,7 +1,7 @@
 import configparser
 import os
 
-THEMES_FILE = "themes.ini"
+THEMES_FILE = os.path.join(os.path.dirname(__file__), "themes.ini")
 
 # Default theme definitions including additional values for tab colors
 DEFAULT_THEMES = {

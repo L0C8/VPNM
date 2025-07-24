@@ -1,7 +1,7 @@
 import json
 import os
 
-PROFILES_FILE = "profiles.json"
+PROFILES_FILE = os.path.join(os.path.dirname(__file__), "profiles.json")
 
 profiles = {}
 selected_profile = None

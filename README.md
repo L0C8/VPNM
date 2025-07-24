@@ -5,7 +5,7 @@ I wrote this as a tool for my own use — especially since I like setting up fre
 ## Features
 
 - Bulk import `.ovpn` files
-- Create and manage login profiles
+- Create and delete login profiles
 - View, edit, or delete VPNs from a user-friendly interface
 - Customize the GUI with theme settings
 

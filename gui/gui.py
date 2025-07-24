@@ -7,6 +7,7 @@ from utils.config import (
     profiles,
     selected_profile,
     add_profile,
+    delete_profile,
     get_profile_names,
     get_profile,
     profile_selector_widget,
@@ -258,7 +259,24 @@ def add_profile_tab(notebook):
     pass_entry = tk.Entry(profile_tab, show="*")
     pass_entry.pack(pady=2)
 
-    tk.Button(profile_tab, text="Save Profile", command=save_profile).pack(pady=10)
+    btn_frame = tk.Frame(profile_tab)
+    btn_frame.pack(pady=10)
+    tk.Button(btn_frame, text="Save Profile", command=save_profile).pack(side="left", padx=5)
+
+    def delete_profile_action():
+        name = selected_profile_var.get()
+        if not name:
+            messagebox.showwarning("No Selection", "Please select a profile to delete.")
+            return
+        confirm = messagebox.askyesno("Confirm Delete", f"Delete profile '{name}'?")
+        if not confirm:
+            return
+        delete_profile(name)
+        selected_profile_var.set("")
+        refresh_profile_dropdown()
+        messagebox.showinfo("Deleted", f"Profile '{name}' deleted.")
+
+    tk.Button(btn_frame, text="Delete Profile", command=delete_profile_action).pack(side="left", padx=5)
 
 # tab for system settings
 def add_settings_tab(notebook, root):
